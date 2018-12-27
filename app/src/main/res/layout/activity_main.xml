@@ -15,8 +15,39 @@
         android:layout_centerInParent="true"/>
 
     <WebView
+        android:visibility="gone"
         android:id="@+id/webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:id="@+id/ll_no_internet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:id="@+id/tv_no_internet"
+            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="@string/no_internet"
+            android:textSize="14sp"/>
+
+        <Button
+            android:id="@+id/btn_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/refresh_page"
+            android:background="@color/colorAccent"
+            android:padding="10dp"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+
 
 </RelativeLayout>

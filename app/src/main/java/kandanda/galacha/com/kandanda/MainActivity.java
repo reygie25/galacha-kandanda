@@ -2,6 +2,7 @@ package kandanda.galacha.com.kandanda;
 
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,13 +12,20 @@ import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+import kandanda.galacha.com.kandanda.helper.Commons;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private WebView webView;
     private ProgressBar progressBar;
     private AlertDialog alertDialog;
+    private LinearLayout llNoInternet;
+    private Button btnRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +38,31 @@ public class MainActivity extends AppCompatActivity {
     private void initView(){
         webView = findViewById(R.id.webview);
         progressBar = findViewById(R.id.progressbar);
+        llNoInternet = findViewById(R.id.ll_no_internet);
+        btnRefresh = findViewById(R.id.btn_refresh);
 
+        btnRefresh.setOnClickListener(this);
+
+        if(Commons.isNetworkAvailable(this)) {
+            llNoInternet.setVisibility(View.GONE);
+            initWebView();
+        } else{
+            hideLoading();
+            llNoInternet.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void showLoading(){
+        progressBar.setVisibility(View.VISIBLE);
+        webView.setVisibility(View.GONE);
+    }
+
+    private void hideLoading(){
+        progressBar.setVisibility(View.GONE);
+        webView.setVisibility(View.VISIBLE);
+    }
+
+    private void initWebView(){
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
         showLoading();
@@ -53,9 +85,10 @@ public class MainActivity extends AppCompatActivity {
                 alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                 alertDialog.setTitle("Error");
                 alertDialog.setMessage(description);
-                alertDialog.setButton(1, "OK", new DialogInterface.OnClickListener() {
+                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        webView.loadUrl(getString(R.string.web_url));
                         alertDialog.dismiss();
                     }
                 });
@@ -66,13 +99,14 @@ public class MainActivity extends AppCompatActivity {
         webView.loadUrl(getString(R.string.web_url));
     }
 
-    private void showLoading(){
-        progressBar.setVisibility(View.VISIBLE);
-        webView.setVisibility(View.GONE);
-    }
-
-    private void hideLoading(){
-        progressBar.setVisibility(View.GONE);
-        webView.setVisibility(View.VISIBLE);
+    @Override
+    public void onClick(View view) {
+        if(Commons.isNetworkAvailable(this)) {
+            llNoInternet.setVisibility(View.GONE);
+            initWebView();
+        } else{
+            hideLoading();
+            llNoInternet.setVisibility(View.VISIBLE);
+        }
     }
 }
