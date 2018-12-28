@@ -13,8 +13,10 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import kandanda.galacha.com.kandanda.helper.Commons;
@@ -26,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AlertDialog alertDialog;
     private LinearLayout llNoInternet;
     private Button btnRefresh;
+    private RelativeLayout rlToolbar;
+    private ImageView ivHome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +44,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressBar = findViewById(R.id.progressbar);
         llNoInternet = findViewById(R.id.ll_no_internet);
         btnRefresh = findViewById(R.id.btn_refresh);
+        rlToolbar = findViewById(R.id.rl_toolbar);
+        ivHome = findViewById(R.id.iv_home);
 
         btnRefresh.setOnClickListener(this);
+        ivHome.setOnClickListener(this);
 
-        if(Commons.isNetworkAvailable(this)) {
-            llNoInternet.setVisibility(View.GONE);
-            initWebView();
-        } else{
-            hideLoading();
-            llNoInternet.setVisibility(View.VISIBLE);
-        }
+        loadDefaultUrl();
     }
 
     private void showLoading(){
@@ -70,12 +71,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         webView.setWebViewClient(new WebViewClient(){
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                view.loadUrl(request.getUrl().toString());
+                String url = request.getUrl().toString();
+                view.loadUrl(url);
                 return true;
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
+                if(url.contains("facebook") || url.contains("twitter") || url.contains("google"))
+                    rlToolbar.setVisibility(View.VISIBLE);
+                else
+                    rlToolbar.setVisibility(View.GONE);
                 if(progressBar.isShown())
                     hideLoading();
             }
@@ -101,10 +107,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        if(Commons.isNetworkAvailable(this)) {
+        switch (view.getId()) {
+            case R.id.btn_refresh:
+                loadDefaultUrl();
+                break;
+            case R.id.iv_home:
+                loadDefaultUrl();
+                break;
+        }
+    }
+
+    private void loadDefaultUrl(){
+        if (Commons.isNetworkAvailable(this)) {
             llNoInternet.setVisibility(View.GONE);
+            rlToolbar.setVisibility(View.GONE);
             initWebView();
-        } else{
+        } else {
             hideLoading();
             llNoInternet.setVisibility(View.VISIBLE);
         }

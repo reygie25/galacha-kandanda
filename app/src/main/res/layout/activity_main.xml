@@ -7,6 +7,32 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/rl_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/white">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/toolbar_logo"
+            android:padding="10dp"/>
+
+        <ImageView
+            android:id="@+id/iv_home"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@mipmap/ic_home"
+            android:textColor="@color/colorAccent"
+            android:layout_marginEnd="10dp"/>
+
+
+    </RelativeLayout>
+
     <ProgressBar
         android:visibility="gone"
         android:id="@+id/progressbar"
@@ -15,12 +41,13 @@
         android:layout_centerInParent="true"/>
 
     <WebView
-        android:visibility="gone"
+        android:layout_below="@+id/rl_toolbar"
         android:id="@+id/webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/ll_no_internet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
